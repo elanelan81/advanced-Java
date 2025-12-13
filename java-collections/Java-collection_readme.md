@@ -11,7 +11,7 @@ Lists are ordered collections that allow duplicate elements. The two primary imp
 ### 1.1 ArrayList (Dynamic Array)
 
 - **Underlying structure**: Backed by a dynamic array (`Object[] elementData`). Modifications are tracked using a `modCount` field, which underpins the **fail-fast** behavior of iterators.
-- **Expansion strategy**: When the array runs out of space, `ArrayList` grows automatically. The new capacity is typically 1.5x the old capacity, implemented via `Arrays.copyOf`, which creates a larger array and copies elements.
+- **Expansion strategy**: When the array runs out of space, `ArrayList` grows automatically. The new capacity is typically **1.5x the old capacity**, implemented via `Arrays.copyOf`, which creates a larger array and copies elements.
 - **Performance**:
   - Random access (`get(int index)`): O(1) – direct index access.
   - Append (`add(E e)`): Amortized O(1), but O(n) when resizing occurs.
@@ -52,7 +52,7 @@ Sets do not allow duplicate elements. Implementation details determine ordering 
 - **Underlying structure**: Backed by a `TreeMap`, which uses a red-black tree (self-balancing BST).
 - **Order**: Maintains elements in sorted order via natural ordering (`Comparable`) or a custom `Comparator`.
 - **Uniqueness**: No duplicates; enforced by tree properties.
-- **Performance**: `add`, `remove`, and `contains` are O(log n).
+- **Performance**: `add`, `remove`, and `contains` are **O(log n)**.
 
 ---
 
@@ -71,13 +71,13 @@ Maps store data as key–value pairs; keys must be unique.
      - If an entry with the same key exists, update its value.
      - Otherwise, append the new node to the list.
   5. If a bucket’s list becomes too long (≥ 8) and the table is large enough (≥ 64), convert the list into a red-black tree to improve worst-case lookup from O(n) to O(log n).
-- **Thread-safety**: Not thread-safe. Use `ConcurrentHashMap` in concurrent environments instead of manual synchronization on `HashMap`.
+- **Thread-safety**: **Not thread-safe**. Use `ConcurrentHashMap` in concurrent environments instead of manual synchronization on `HashMap`.
 
 ### 3.2 TreeMap
 
-- **Underlying structure**: Red-black tree.
+- **Underlying structure**: **Red-black tree**.
 - **Order**: Entries are sorted by key (natural or via `Comparator`).
-- **Performance**: `get`, `put`, and `remove` are O(log n).
+- **Performance**: `get`, `put`, and `remove` are **O(log n)**.
 - **Extras**: Supports range views like `subMap`, `headMap`, `tailMap` efficiently.
 
 ### 3.3 ConcurrentHashMap
@@ -85,7 +85,7 @@ Maps store data as key–value pairs; keys must be unique.
 - **JDK 7**: Used segmented locks (map divided into segments with separate locks).
 - **JDK 8+**: Moved to bucket-level synchronization and CAS-based operations:
   - Uses `synchronized` on individual buckets for writes.
-  - Uses CAS and `volatile` for non-blocking reads.
+  - Uses **CAS (Compare-And-Swap)** and `volatile` for non-blocking reads.
 - **Benefit**: Much finer-grained locking and improved concurrency; multiple threads can operate on different buckets with minimal contention.
 
 ---
@@ -104,9 +104,9 @@ Because `LinkedList` implements `Deque`, it works well as a FIFO queue:
 
 ### 4.2 PriorityQueue
 
-- **Underlying structure**: Binary heap (min-heap by default).
+- **Underlying structure**: **Binary heap** (min-heap by default).
 - **Behavior**: The head is always the smallest element according to natural ordering or a `Comparator`.
-- **Performance**: `offer` and `poll` are O(log n) due to heap sift-up/sift-down operations.
+- **Performance**: `offer` and `poll` are **O(log n)** due to heap sift-up/sift-down operations.
 - **Best for**: Task scheduling, top-N problems, and any scenario where you need efficient access to the “next” most important element.
 
 ---
@@ -126,8 +126,8 @@ Because `LinkedList` implements `Deque`, it works well as a FIFO queue:
 
 **Q3: Why did ConcurrentHashMap abandon segment locks in JDK 8?**
 
-- Segment locks had a fixed concurrency level (e.g., 16 by default), which limited scalability.
-- JDK 8+ uses bucket-level locking and CAS, reducing contention and allowing many more threads to operate concurrently on different buckets.
+- The segment lock in JDK 1.7 had a fixed concurrency level (16 by default), which was a bottleneck.
+- The JDK 1.8 approach of using CAS and synchronized on individual hash buckets provides much **finer-grained locking**. This dramatically improves concurrency, as different threads can operate on different buckets simultaneously without contention.
 
 ---
 
